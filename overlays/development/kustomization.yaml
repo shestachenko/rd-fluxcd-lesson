@@ -1,0 +1,28 @@
+resources:
+  - namespace.yaml
+  - ../../base
+  - dragonfly.yaml
+
+namespace: development
+
+namePrefix: dev-
+
+labels:
+  - pairs:
+      environment: development
+
+patches:
+  - target:
+      kind: Deployment
+      name: course-app
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: APP_STORE
+            value: redis
+          - name: APP_REDIS_URL
+            value: redis://dev-edu-dragonfly:6379/0
