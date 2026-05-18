@@ -1,4 +1,5 @@
 resources:
   - flux-system
   - development.yaml
+  - production.yaml
   - ../../infrastructure/controllers/dragonfly

@@ -1,0 +1,38 @@
+resources:
+  - namespace.yaml
+  - ../../base
+  - dragonfly.yaml
+  - hpa.yaml
+
+namespace: production
+
+namePrefix: prod-
+
+labels:
+  - pairs:
+      environment: production
+
+patches:
+  - target:
+      kind: Deployment
+      name: course-app
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 3
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: APP_STORE
+            value: redis
+          - name: APP_REDIS_URL
+            value: redis://prod-edu-dragonfly:6379/0
